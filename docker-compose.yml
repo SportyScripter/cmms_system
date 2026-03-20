@@ -1,7 +1,7 @@
 services:
   web:
     build: .
-    command: tail -f /dev/null
+    command: python src/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
