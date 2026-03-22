@@ -62,7 +62,7 @@ class WorkOrder(models.Model):
     priority = models.CharField(
         max_length=1,
         choices=Priority.choices,
-        default=Priority.choices,
+        default=Priority.MEDIUM,
         verbose_name="Priorytet",
     )
     status = models.CharField(
