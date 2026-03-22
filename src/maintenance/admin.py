@@ -6,7 +6,7 @@ from .models import Machine, WorkOrder
 @admin.register(Machine)
 class MachineAdmin(admin.ModelAdmin):
     list_display = ("name", "serial_number", "location", "status")
-    list_filer = ("status", "location")
+    list_filter = ("status", "location")
     search_fields = ("name", "serial_number", "manufacturer")
 
 
