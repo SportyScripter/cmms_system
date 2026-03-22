@@ -1,5 +1,8 @@
-from django.db import models
 import uuid
+import qrcode
+from io import BytesIO
+from django.db import models
+from django.core.files import File
 
 
 # Create your models here.
@@ -64,6 +67,20 @@ class Part(models.Model):
     def save(self, *args, **kwargs):
         if not self.unique_code:
             self.unique_code = f"Part-{str(uuid.uuid4())[:8].upper()}"
+        if not self.barecode_image:
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=4,
+            )
+            qr.add_data(self.unique_code)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+            buffer = BytesIO()
+            img.save(buffer, format="PNG")
+            file_name = f"{self.unique_code}.png"
+            self.barecode_image.save(file_name, File(buffer), save=False)
         super().save(*args, **kwargs)
 
     def is_low_stock(self):
