@@ -14,7 +14,7 @@ class Machine(models.Model):
         max_length=100, unique=True, verbose_name="Numer seryjny/Inwentarzowy"
     )
     location = models.CharField(
-        max_length=100, unique=True, verbose_name="Lokalizacja (Hala/Linia)"
+        max_length=100, db_index=True, verbose_name="Lokalizacja (Hala/Linia)"
     )
     status = models.CharField(
         max_length=2,
