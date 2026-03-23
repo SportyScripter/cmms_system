@@ -60,8 +60,11 @@ class Part(models.Model):
         null=True,
         verbose_name="Zdjęcie poglądowe",
     )
-    assigment = models.CharField(
-        max_length=500, blank=True, verbose_name="Przeznaczenie/Opis"
+    machines = models.ManyToManyField(
+        "maintenance.Machine",
+        blank=True,
+        related_name="compatible_parts",
+        verbose_name="Pasuje do maszyn",
     )
 
     def save(self, *args, **kwargs):
@@ -87,9 +90,7 @@ class Part(models.Model):
         return self.quantity <= self.min_quantity
 
     def __str__(self):
-        return (
-            f"[{self.unique_code}] {self.name} - {self.type_model} - {self.assigment}"
-        )
+        return f"[{self.unique_code}] {self.name} - {self.type_model}"
 
     class Meta:
         verbose_name = "Część magazynowa"
