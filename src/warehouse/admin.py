@@ -16,14 +16,23 @@ class PartAdmin(admin.ModelAdmin):
         "unique_code",
         "name",
         "category",
-        "assigment",
+        "get_machines",
         "quantity",
         "location",
         "is_low_stock_display",
     )
     list_filter = ("category", "location")
-    search_fields = ("name", "unique_code", "type_model", "assigment")
+    search_fields = ("name", "unique_code", "type_model", "machines__name")
+    filter_horizontal = ("machines",)
 
     @admin.display(boolean=True, description="Stan OK")
     def is_low_stock_display(self, obj):
         return not obj.is_low_stock()
+
+    @admin.display(description="Pasuje do maszyny")
+    def get_machines(self, obj):
+        machines = obj.machines.all()[:3]
+        names = [m.name for m in machines]
+        if obj.machines.count() > 3:
+            names.append("...")
+        return ", ".join(names)
