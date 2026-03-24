@@ -7,7 +7,7 @@ class User(AbstractUser):
         ADMIN = "ADMIN", "Administrator"
         MECHANIK = "MECHANIK", "Serwisant/Mechanik"
         OPERATOR = "OPERATOR", "Operator"
-        VIEWER = "VIEWER", "Przeglądjący (kierownictwo)"
+        VIEWER = "VIEWER", "Przeglądający (kierownictwo)"
         
     role = models.CharField(
         max_length=20,
