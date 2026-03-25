@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Part
+from .models import Category, Part, InventoryLog
 
 # Register your models here.
 
@@ -36,3 +37,30 @@ class PartAdmin(admin.ModelAdmin):
         if obj.machines.count() > 3:
             names.append("...")
         return ", ".join(names)
+
+
+@admin.register(InventoryLog)
+class InventoryLogAdmin(admin.ModelAdmin):
+    list_display = (
+        "timestamp",
+        "transaction_type",
+        "part",
+        "quantity",
+        "user",
+        "work_order",
+    )
+    list_filter = ("transaction_type", "timestamp", "user")
+    search_fields = ("part__name", "part__unique_code", "work_order__title")
+
+    def get_random_fields(self, obj):
+        if obj:
+            return (
+                "part",
+                "user",
+                "work_order",
+                "transaction_type",
+                "quantity",
+                "timestamp",
+                "notes",
+            )
+        return "timestamp"
