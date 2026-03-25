@@ -3,6 +3,7 @@ import qrcode
 from io import BytesIO
 from django.db import models
 from django.core.files import File
+from django.conf import settings
 
 
 # Create your models here.
@@ -95,3 +96,54 @@ class Part(models.Model):
     class Meta:
         verbose_name = "Część magazynowa"
         verbose_name_plural = "Części magazynowe"
+
+
+class InventoryLog(models.Model):
+    class TransactionType(models.TextChoices):
+        ISSUE = "ISSUE", "Wydanie (Zużycie)"
+        RECEIPT = "RECEIPT", "Przyjęcie (Dostawa/Zwrot)"
+
+    part = models.ForeignKey(
+        Part, on_delete=models.CASCADE, related_name="logs", verbose_name="Część"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="Użytkownik",
+    )
+    work_order = models.ForeignKey(
+        "maintenance.WorkOrder",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="used_parts",
+        verbose_name="Zlecenie naprawy",
+    )
+    transaction_type = models.CharField(
+        max_length=10,
+        choices=TransactionType.choices,
+        default=TransactionType.ISSUE,
+        verbose_name="Typ operacji",
+    )
+    quantity = models.PositiveIntegerField(verbose_name="Ilość")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Data operacji")
+    notes = models.TextField(blank=True, verbose_name="Uwagi")
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new:
+            if self.transaction_type == self.TransactionType.ISSUE:
+                self.part.quantity -= self.quantity
+            elif self.transaction_type == self.TransactionType.RECEIPT:
+                self.part.quantity += self.quantity
+            self.part.save()
+
+    def __str__(self):
+        return f"{self.get_transaction_type_display()} - {self.part.name} ({self.quantity}szt.)"
+
+    class Meta:
+        verbose_name = "Log Magazynowy (Zużycie)"
+        verbose_name_plural = "Logi Magazynowe"
+        ordering = ["-timestamp"]
