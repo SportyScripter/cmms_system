@@ -55,6 +55,15 @@ class Part(models.Model):
     supplier_link = models.URLField(
         max_length=500, blank=True, verbose_name="Link do dostawcy/dokumentacji"
     )
+    supplier_name = models.CharField(
+        max_length=200, blank=True, verbose_name="Preferowany dostawca (Nazwa/Kontakt)"
+    )
+    supplier_catalog_number = models.CharField(
+        max_length=100, blank=True, verbose_name="Nr katalogowy dostawcy"
+    )
+    lead_time_days = models.PositiveBigIntegerField(
+        null=True, blank=True, verbose_name="czas dostawy (Lead Time w dniach)"
+    )
     image = models.ImageField(
         upload_to="part_images/",
         blank=True,
