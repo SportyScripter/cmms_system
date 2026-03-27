@@ -62,7 +62,7 @@ class Part(models.Model):
         max_length=100, blank=True, verbose_name="Nr katalogowy dostawcy"
     )
     lead_time_days = models.PositiveBigIntegerField(
-        null=True, blank=True, verbose_name="czas dostawy (Lead Time w dniach)"
+        null=True, blank=True, verbose_name="Czas dostawy (Lead Time w dniach)"
     )
     image = models.ImageField(
         upload_to="part_images/",
