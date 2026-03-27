@@ -45,13 +45,32 @@ class Machine(models.Model):
         return f"{self.name} ({self.serial_number}) - {self.get_status_display()}"
 
     def save(self, *args, **kwargs):
-        if not self.qr_code_image and self.serial_number:
+        generate_qr = False
+
+        # Determine if this is an update and whether the serial number has changed.
+        old_serial_number = None
+        if self.pk:
+            try:
+                old_instance = self.__class__.objects.get(pk=self.pk)
+                old_serial_number = old_instance.serial_number
+            except self.__class__.DoesNotExist:
+                old_serial_number = None
+
+        # Generate QR if it does not exist yet or if the serial number has changed.
+        if self.serial_number:
+            if not self.qr_code_image:
+                generate_qr = True
+            elif old_serial_number is not None and old_serial_number != self.serial_number:
+                generate_qr = True
+
+        if generate_qr:
             qr = qrcode.QRCode(version=1, box_size=10, border=4)
             qr.add_data(f"MACHINE-{self.serial_number}")
             qr.make(fit=True)
             img = qr.make_image(fill_color="black", back_color="white")
             buffer = BytesIO()
             img.save(buffer, format="PNG")
+            buffer.seek(0)
             file_name = f"qr_machine_{self.serial_number}.png"
             self.qr_code_image.save(file_name, File(buffer), save=False)
         super().save(*args, **kwargs)
