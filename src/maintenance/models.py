@@ -1,4 +1,7 @@
 from django.db import models
+import qrcode
+from io import BytesIO
+from django.core.files import File
 
 # Create your models here.
 
@@ -28,9 +31,49 @@ class Machine(models.Model):
     year_of_production = models.IntegerField(
         null=True, blank=True, verbose_name="Rok produkcji"
     )
+    documentation = models.FileField(
+        upload_to="machine_docs/",
+        blank=True,
+        null=True,
+        verbose_name="Dokumentacja (PDF)",
+    )
+    qr_code_image = models.ImageField(
+        upload_to="machine_qrs/", blank=True, null=True, verbose_name="Kod QR Maszyny"
+    )
 
     def __str__(self):
         return f"{self.name} ({self.serial_number}) - {self.get_status_display()}"
+
+    def save(self, *args, **kwargs):
+        generate_qr = False
+
+        # Determine if this is an update and whether the serial number has changed.
+        old_serial_number = None
+        if self.pk:
+            try:
+                old_instance = self.__class__.objects.get(pk=self.pk)
+                old_serial_number = old_instance.serial_number
+            except self.__class__.DoesNotExist:
+                old_serial_number = None
+
+        # Generate QR if it does not exist yet or if the serial number has changed.
+        if self.serial_number:
+            if not self.qr_code_image:
+                generate_qr = True
+            elif old_serial_number is not None and old_serial_number != self.serial_number:
+                generate_qr = True
+
+        if generate_qr:
+            qr = qrcode.QRCode(version=1, box_size=10, border=4)
+            qr.add_data(f"MACHINE-{self.serial_number}")
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+            buffer = BytesIO()
+            img.save(buffer, format="PNG")
+            buffer.seek(0)
+            file_name = f"qr_machine_{self.serial_number}.png"
+            self.qr_code_image.save(file_name, File(buffer), save=False)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Maszyna"
@@ -71,7 +114,15 @@ class WorkOrder(models.Model):
         default=Status.PENDING,
         verbose_name="Status",
     )
-
+    photo = models.ImageField(
+        upload_to="work_order_photos/",
+        blank=True,
+        null=True,
+        verbose_name="Zdjęcie usterki",
+    )
+    completed_at = models.DateTimeField(
+        null=True, blank=True, verbose_name="Data i czas zakończenia naprawy"
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Data utworzenia")
     updated_at = models.DateTimeField(
         auto_now=True, verbose_name="Data ostatniej aktualizacji"
