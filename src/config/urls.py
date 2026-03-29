@@ -20,13 +20,13 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
-from warehouse.views import PartViewSet
 
 # --- JWT Authentication Endpoints ---
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from warehouse.views import PartViewSet
 
 router = DefaultRouter()
 router.register(r"parts", PartViewSet)
