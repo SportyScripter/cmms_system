@@ -141,5 +141,10 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # --- REST FRAMEWORK CONFIGURATION ---
 REST_FRAMEWORK = {
-    # JWT Authentication
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
