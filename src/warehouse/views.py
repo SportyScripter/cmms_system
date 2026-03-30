@@ -8,7 +8,7 @@ class PartViewSet(viewsets.ModelViewSet):
     serializer_class = PartSerializer
 
 class InventoryLogViewSet(viewsets.ModelViewSet):
-    queryset = InventoryLog.objects.all()
+    queryset = InventoryLog.objects.select_related('part', 'user', 'work_order')
     serializer_class = InventoryLogSerializer
 
     def perform_create(self, serializer):
