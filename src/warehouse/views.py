@@ -10,3 +10,9 @@ class PartViewSet(viewsets.ModelViewSet):
 class InventoryLogViewSet(viewsets.ModelViewSet):
     queryset = InventoryLog.objects.all()
     serializer_class = InventoryLogSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
