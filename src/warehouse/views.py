@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from .models import Part , InventoryLog
 from .serializers import PartSerializer, InventoryLogSerializer
