@@ -44,3 +44,36 @@ class InventoryLogSerializer(serializers.ModelSerializer):
             "notes",
         ]
         read_only_fields = ["timestamp"]
+
+    def validate(self, attrs):
+        """
+        Enforce business rules for inventory transactions:
+        - quantity must be strictly greater than zero
+        - ISSUE transactions cannot request more than available stock
+        """
+        # Support both create (attrs) and update (self.instance) scenarios
+        part = attrs.get("part") or getattr(self.instance, "part", None)
+        quantity = attrs.get("quantity", getattr(self.instance, "quantity", None))
+        transaction_type = attrs.get(
+            "transaction_type", getattr(self.instance, "transaction_type", None)
+        )
+
+        # Ensure quantity is provided and strictly positive
+        if quantity is None or quantity <= 0:
+            raise serializers.ValidationError(
+                {"quantity": "Quantity must be greater than zero."}
+            )
+
+        # For ISSUE transactions, ensure we do not exceed available stock
+       _ttype = str(transaction_type).upper() if transaction_type is not None else ""
+        if _ttype == "ISSUE":
+            if part is None:
+                raise serializers.ValidationError(
+                    {"part": "Part must be specified for ISSUE transactions."}
+                )
+            if quantity > part.quantity:
+                raise serializers.ValidationError(
+                    {"quantity": "Requested quantity exceeds available stock."}
+                )
+
+        return attrs
