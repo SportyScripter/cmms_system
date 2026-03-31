@@ -8,7 +8,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from warehouse.views import PartViewSet, InventoryLogViewSet
-from maintenance.views import MachineViewSet, WorkOrderViewSet
+from maintenance.views import (
+    MachineViewSet,
+    WorkOrderViewSet,
+    MaintenanceScheduleViewSet,
+)
 from accounts.views import UserViewSet
 
 router = DefaultRouter()
@@ -17,7 +21,7 @@ router.register(r"inventory-logs", InventoryLogViewSet)
 router.register(r"machines", MachineViewSet)
 router.register(r"work-orders", WorkOrderViewSet)
 router.register(r"users", UserViewSet)
-
+router.register(r"schedules", MaintenanceScheduleViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),

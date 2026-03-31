@@ -64,8 +64,8 @@ class InventoryLogSerializer(serializers.ModelSerializer):
                 {"quantity": "Quantity must be greater than zero."}
             )
 
-        # For ISSUE transactions, ensure we do not exceed available stock
-       _ttype = str(transaction_type).upper() if transaction_type is not None else ""
+            # For ISSUE transactions, ensure we do not exceed available stock
+        _ttype = str(transaction_type).upper() if transaction_type is not None else ""
         if _ttype == "ISSUE":
             if part is None:
                 raise serializers.ValidationError(

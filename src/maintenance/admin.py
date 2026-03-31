@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Machine, WorkOrder
+from .models import MaintenanceSchedule
 
 
 # Register your models here.
@@ -16,3 +17,9 @@ class WorkOrderAdmin(admin.ModelAdmin):
     list_filter = ("status", "priority", "created_at")
     search_fields = ("title", "description", "machine__name", "machine__serial_number")
     date_hierarchy = "created_at"
+
+
+@admin.register(MaintenanceSchedule)
+class MaintenanceScheduleAdmin(admin.ModelAdmin):
+    list_display = ("title", "machine", "interval_days", "next_due_date", "is_active")
+    list_filter = ("is_active", "next_due_date")
