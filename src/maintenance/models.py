@@ -60,7 +60,10 @@ class Machine(models.Model):
         if self.serial_number:
             if not self.qr_code_image:
                 generate_qr = True
-            elif old_serial_number is not None and old_serial_number != self.serial_number:
+            elif (
+                old_serial_number is not None
+                and old_serial_number != self.serial_number
+            ):
                 generate_qr = True
 
         if generate_qr:
@@ -135,3 +138,31 @@ class WorkOrder(models.Model):
         verbose_name = "Zlecenie naprawy"
         verbose_name_plural = "Zlecenia naprawy"
         ordering = ["-created_at"]
+
+
+class MaintenanceSchedule(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Nazwa przeglądy/zadania")
+    machine = models.ForeignKey(
+        Machine,
+        on_delete=models.CASCADE,
+        related_name="schedules",
+        verbose_name="Maszyna",
+    )
+    description = models.TextField(blank=True, verbose_name="Zakres prac")
+    interval_days = models.PositiveIntegerField(
+        verbose_name="Częstotliwość (dni)",
+        help_text="Co ile dni należy powtarzać zadanie? (0 jeśli jednorozowe)",
+    )
+    next_due_date = models.DateField(
+        verbose_name="Data najbliższego wykonania", null=True, blank=True
+    )
+    is_active = models.BooleanField(default=True, verbose_name="Czy aktywne?")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.machine.name} (Termin: {self.next_due_date})"
+
+    class Meta:
+        verbose_name = "Harmonogram przeglądu"
+        verbose_name_plural = "Harmonogramy przeglądów"
+        ordering = ["next_due_date"]

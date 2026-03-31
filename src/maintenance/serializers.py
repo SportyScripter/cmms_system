@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Machine, WorkOrder
+from .models import Machine, WorkOrder, MaintenanceSchedule
 
 
 class MachineSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class WorkOrderSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "machine",
-            "mechine_name",
+            "machine_name",
             "title",
             "description",
             "priority",
@@ -24,5 +24,22 @@ class WorkOrderSerializer(serializers.ModelSerializer):
             "photo",
             "created_at",
             "updated_at",
-            "completion_at",
+            "completed_at",
+        ]
+
+
+class MaintenanceScheduleSerializer(serializers.ModelSerializer):
+    machine_name = serializers.CharField(source="machine.name", read_only=True)
+
+    class Meta:
+        model = MaintenanceSchedule
+        fields = [
+            "id",
+            "title",
+            "machine",
+            "machine_name",
+            "description",
+            "interval_days",
+            "next_due_date",
+            "is_active",
         ]
