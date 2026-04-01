@@ -14,12 +14,14 @@ from maintenance.views import (
     MaintenanceScheduleViewSet,
 )
 from accounts.views import UserViewSet
+from communication.views import MessageViewSet
 
 router = DefaultRouter()
 router.register(r"parts", PartViewSet)
 router.register(r"inventory-logs", InventoryLogViewSet)
 router.register(r"machines", MachineViewSet)
 router.register(r"work-orders", WorkOrderViewSet)
+router.register(r"messages", MessageViewSet, basename="messages")
 router.register(r"users", UserViewSet)
 router.register(r"schedules", MaintenanceScheduleViewSet)
 urlpatterns = [
