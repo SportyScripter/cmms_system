@@ -5,30 +5,29 @@ import axios from 'axios';
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // Do wyświetlania błędów
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(''); // Czyścimy stary błąd przed nową próbą
+    setError('');
 
     try {
-      // Uderzamy do naszego Django przez Proxy!
       const response = await axios.post('/api/token/', {
         username: username,
         password: password
       });
 
-      // Zapisujemy tokeny do pamięci przeglądarki (Local Storage)
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);
-
-      // Przenosimy użytkownika do panelu
       navigate('/dashboard');
 
     } catch (err) {
-      // Jeśli Django zwróci błąd 401 (złe hasło), ustawiamy komunikat
-      setError('Nieprawidłowy login lub hasło.');
+      if (err.response?.status === 401) {
+        setError('Nieprawidłowy login lub hasło.');
+      } else {
+        setError('Wystąpił problem z połączeniem lub serwerem. Spróbuj ponownie później.');
+      }
     }
   };
 
@@ -41,7 +40,6 @@ export default function LoginPage() {
           <p className="mt-2 text-sm text-slate-500">Zaloguj się do swojego konta</p>
         </div>
 
-        {/* Jeśli jest błąd, pokaż czerwoną ramkę */}
         {error && (
           <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center border border-red-200">
             {error}
@@ -80,7 +78,6 @@ export default function LoginPage() {
             Zaloguj się
           </button>
         </form>
-
       </div>
     </div>
   );

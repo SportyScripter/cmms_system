@@ -1,25 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api'; // Importujemy naszego nowego, uzbrojonego axiosa!
+import api from '../api';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
 
-  // useEffect uruchomi się automatycznie zaraz po załadowaniu tego ekranu
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // Zauważ, że nie musimy podawać '/api/users/', bo bazę '/api' ustawiliśmy w api.js
-        // Nie musimy też ręcznie dodawać tokena - interceptor zrobi to za nas!
         const response = await api.get('/users/');
         setUsers(response.data);
       } catch (err) {
         console.error("Błąd pobierania danych:", err);
         setError("Brak uprawnień lub sesja wygasła.");
-        // Jeśli token wygasł lub jest zły, wylogowujemy profilaktycznie
-        handleLogout(); 
       }
     };
 
@@ -36,7 +31,6 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-slate-50 p-8">
       <div className="max-w-4xl mx-auto space-y-6">
         
-        {/* Górny panel */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-slate-800">Panel Główny CMMS</h1>
@@ -50,12 +44,11 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Sekcja z pobranymi danymi */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">Użytkownicy w systemie (Zaciągnięci z bazy)</h2>
           
           {error ? (
-            <p className="text-red-500">{error}</p>
+            <p className="text-red-500 font-medium">{error}</p>
           ) : (
             <ul className="divide-y divide-slate-100">
               {users.map((user) => (
@@ -66,7 +59,6 @@ export default function DashboardPage() {
               ))}
             </ul>
           )}
-          
         </div>
       </div>
     </div>
