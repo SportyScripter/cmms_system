@@ -1,5 +1,5 @@
+import { AlertCircle, Minus, Package, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Package, Search, AlertCircle, Plus, Minus } from "lucide-react";
 import api from "../api";
 
 export default function WarehousePage() {
