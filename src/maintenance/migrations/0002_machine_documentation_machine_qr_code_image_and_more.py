@@ -6,28 +6,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('maintenance', '0001_initial'),
+        ("maintenance", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='machine',
-            name='documentation',
-            field=models.FileField(blank=True, null=True, upload_to='machine_docs/', verbose_name='Dokumentacja (PDF)'),
+            model_name="machine",
+            name="documentation",
+            field=models.FileField(
+                blank=True,
+                null=True,
+                upload_to="machine_docs/",
+                verbose_name="Dokumentacja (PDF)",
+            ),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='qr_code_image',
-            field=models.ImageField(blank=True, null=True, upload_to='machine_qrs/', verbose_name='Kod QR Maszyny'),
+            model_name="machine",
+            name="qr_code_image",
+            field=models.ImageField(
+                blank=True,
+                null=True,
+                upload_to="machine_qrs/",
+                verbose_name="Kod QR Maszyny",
+            ),
         ),
         migrations.AddField(
-            model_name='workorder',
-            name='completed_at',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Data i czas zakończenia naprawy'),
+            model_name="workorder",
+            name="completed_at",
+            field=models.DateTimeField(
+                blank=True, null=True, verbose_name="Data i czas zakończenia naprawy"
+            ),
         ),
         migrations.AddField(
-            model_name='workorder',
-            name='photo',
-            field=models.ImageField(blank=True, null=True, upload_to='work_order_photos/', verbose_name='Zdjęcie usterki'),
+            model_name="workorder",
+            name="photo",
+            field=models.ImageField(
+                blank=True,
+                null=True,
+                upload_to="work_order_photos/",
+                verbose_name="Zdjęcie usterki",
+            ),
         ),
     ]

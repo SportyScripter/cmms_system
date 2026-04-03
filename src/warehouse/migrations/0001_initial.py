@@ -9,42 +9,140 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('maintenance', '0001_initial'),
+        ("maintenance", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, unique=True, verbose_name='Nazwa kategorii')),
-                ('description', models.TextField(blank=True, verbose_name='Opis')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=100, unique=True, verbose_name="Nazwa kategorii"
+                    ),
+                ),
+                ("description", models.TextField(blank=True, verbose_name="Opis")),
             ],
             options={
-                'verbose_name': 'Kategoria',
-                'verbose_name_plural': 'Kategorie',
+                "verbose_name": "Kategoria",
+                "verbose_name_plural": "Kategorie",
             },
         ),
         migrations.CreateModel(
-            name='Part',
+            name="Part",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200, verbose_name='Nazwa części')),
-                ('type_model', models.CharField(blank=True, max_length=100, verbose_name='Typ/Model')),
-                ('unique_code', models.CharField(blank=True, max_length=50, unique=True, verbose_name='Unikalny kod (SKU)')),
-                ('barecode_image', models.ImageField(blank=True, null=True, upload_to='barcodes/', verbose_name='Kod kreskowy/QR')),
-                ('quantity', models.IntegerField(default=0, verbose_name='Ilość na stanie')),
-                ('min_quantity', models.IntegerField(default=1, verbose_name='Stan minimalny (Alert)')),
-                ('location', models.CharField(blank=True, max_length=500, verbose_name='Lokalizacja (Regał/Półka)')),
-                ('price', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, verbose_name='Cena netto (PLN)')),
-                ('supplier_link', models.URLField(blank=True, max_length=500, verbose_name='Link do dostawcy/dokumentacji')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='part_images/', verbose_name='Zdjęcie poglądowe')),
-                ('category', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='parts', to='warehouse.category', verbose_name='Kategoria')),
-                ('machines', models.ManyToManyField(blank=True, related_name='compatible_parts', to='maintenance.machine', verbose_name='Pasuje do maszyn')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200, verbose_name="Nazwa części")),
+                (
+                    "type_model",
+                    models.CharField(
+                        blank=True, max_length=100, verbose_name="Typ/Model"
+                    ),
+                ),
+                (
+                    "unique_code",
+                    models.CharField(
+                        blank=True,
+                        max_length=50,
+                        unique=True,
+                        verbose_name="Unikalny kod (SKU)",
+                    ),
+                ),
+                (
+                    "barecode_image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="barcodes/",
+                        verbose_name="Kod kreskowy/QR",
+                    ),
+                ),
+                (
+                    "quantity",
+                    models.IntegerField(default=0, verbose_name="Ilość na stanie"),
+                ),
+                (
+                    "min_quantity",
+                    models.IntegerField(
+                        default=1, verbose_name="Stan minimalny (Alert)"
+                    ),
+                ),
+                (
+                    "location",
+                    models.CharField(
+                        blank=True,
+                        max_length=500,
+                        verbose_name="Lokalizacja (Regał/Półka)",
+                    ),
+                ),
+                (
+                    "price",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=10,
+                        null=True,
+                        verbose_name="Cena netto (PLN)",
+                    ),
+                ),
+                (
+                    "supplier_link",
+                    models.URLField(
+                        blank=True,
+                        max_length=500,
+                        verbose_name="Link do dostawcy/dokumentacji",
+                    ),
+                ),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="part_images/",
+                        verbose_name="Zdjęcie poglądowe",
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="parts",
+                        to="warehouse.category",
+                        verbose_name="Kategoria",
+                    ),
+                ),
+                (
+                    "machines",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="compatible_parts",
+                        to="maintenance.machine",
+                        verbose_name="Pasuje do maszyn",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Część magazynowa',
-                'verbose_name_plural': 'Części magazynowe',
+                "verbose_name": "Część magazynowa",
+                "verbose_name_plural": "Części magazynowe",
             },
         ),
     ]

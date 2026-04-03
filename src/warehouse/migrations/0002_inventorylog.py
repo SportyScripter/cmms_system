@@ -8,28 +8,78 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('maintenance', '0001_initial'),
-        ('warehouse', '0001_initial'),
+        ("maintenance", "0001_initial"),
+        ("warehouse", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='InventoryLog',
+            name="InventoryLog",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('transaction_type', models.CharField(choices=[('ISSUE', 'Wydanie (Zużycie)'), ('RECEIPT', 'Przyjęcie (Dostawa/Zwrot)')], default='ISSUE', max_length=10, verbose_name='Typ operacji')),
-                ('quantity', models.PositiveIntegerField(verbose_name='Ilość')),
-                ('timestamp', models.DateTimeField(auto_now_add=True, verbose_name='Data operacji')),
-                ('notes', models.TextField(blank=True, verbose_name='Uwagi')),
-                ('part', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='logs', to='warehouse.part', verbose_name='Część')),
-                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='Użytkownik')),
-                ('work_order', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='used_parts', to='maintenance.workorder', verbose_name='Zlecenie naprawy')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "transaction_type",
+                    models.CharField(
+                        choices=[
+                            ("ISSUE", "Wydanie (Zużycie)"),
+                            ("RECEIPT", "Przyjęcie (Dostawa/Zwrot)"),
+                        ],
+                        default="ISSUE",
+                        max_length=10,
+                        verbose_name="Typ operacji",
+                    ),
+                ),
+                ("quantity", models.PositiveIntegerField(verbose_name="Ilość")),
+                (
+                    "timestamp",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Data operacji"
+                    ),
+                ),
+                ("notes", models.TextField(blank=True, verbose_name="Uwagi")),
+                (
+                    "part",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="logs",
+                        to="warehouse.part",
+                        verbose_name="Część",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Użytkownik",
+                    ),
+                ),
+                (
+                    "work_order",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="used_parts",
+                        to="maintenance.workorder",
+                        verbose_name="Zlecenie naprawy",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Log Magazynowy (Zużycie)',
-                'verbose_name_plural': 'Logi Magazynowe',
-                'ordering': ['-timestamp'],
+                "verbose_name": "Log Magazynowy (Zużycie)",
+                "verbose_name_plural": "Logi Magazynowe",
+                "ordering": ["-timestamp"],
             },
         ),
     ]
