@@ -12,7 +12,7 @@ export default function MachinesPage() {
   const [machines, setMachines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [updatingId, setUpdatingId] = useState(null); 
+  const [updatingId, setUpdatingId] = useState(null);
 
   useEffect(() => {
     fetchMachines();
@@ -43,7 +43,7 @@ export default function MachinesPage() {
       console.error("Błąd aktualizacji:", err);
       alert("Nie udało się zmienić statusu maszyny. Sprawdź konsolę.");
     } finally {
-      setUpdatingId(null); 
+      setUpdatingId(null);
     }
   };
 

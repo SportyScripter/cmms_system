@@ -6,23 +6,31 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('warehouse', '0002_inventorylog'),
+        ("warehouse", "0002_inventorylog"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='part',
-            name='lead_time_days',
-            field=models.PositiveBigIntegerField(blank=True, null=True, verbose_name='czas dostawy (Lead Time w dniach)'),
+            model_name="part",
+            name="lead_time_days",
+            field=models.PositiveBigIntegerField(
+                blank=True, null=True, verbose_name="czas dostawy (Lead Time w dniach)"
+            ),
         ),
         migrations.AddField(
-            model_name='part',
-            name='supplier_catalog_number',
-            field=models.CharField(blank=True, max_length=100, verbose_name='Nr katalogowy dostawcy'),
+            model_name="part",
+            name="supplier_catalog_number",
+            field=models.CharField(
+                blank=True, max_length=100, verbose_name="Nr katalogowy dostawcy"
+            ),
         ),
         migrations.AddField(
-            model_name='part',
-            name='supplier_name',
-            field=models.CharField(blank=True, max_length=200, verbose_name='Preferowany dostawca (Nazwa/Kontakt)'),
+            model_name="part",
+            name="supplier_name",
+            field=models.CharField(
+                blank=True,
+                max_length=200,
+                verbose_name="Preferowany dostawca (Nazwa/Kontakt)",
+            ),
         ),
     ]

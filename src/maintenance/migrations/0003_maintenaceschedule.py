@@ -7,26 +7,66 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('maintenance', '0002_machine_documentation_machine_qr_code_image_and_more'),
+        ("maintenance", "0002_machine_documentation_machine_qr_code_image_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MaintenaceSchedule',
+            name="MaintenaceSchedule",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200, verbose_name='Nazwa przeglądy/zadania')),
-                ('description', models.TextField(blank=True, verbose_name='Zakres prac')),
-                ('interval_days', models.PositiveIntegerField(help_text='Co ile dni należy powtarzać zadanie? (0 jeśli jednorozowe)', verbose_name='Częstotliwość (dni)')),
-                ('next_due_date', models.DateField(blank=True, null=True, verbose_name='Data najbliższego wykonania')),
-                ('is_active', models.BooleanField(default=True, verbose_name='Czy aktywne?')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('machine', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='schedules', to='maintenance.machine', verbose_name='Maszyna')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        max_length=200, verbose_name="Nazwa przeglądy/zadania"
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, verbose_name="Zakres prac"),
+                ),
+                (
+                    "interval_days",
+                    models.PositiveIntegerField(
+                        help_text="Co ile dni należy powtarzać zadanie? (0 jeśli jednorozowe)",
+                        verbose_name="Częstotliwość (dni)",
+                    ),
+                ),
+                (
+                    "next_due_date",
+                    models.DateField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Data najbliższego wykonania",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(default=True, verbose_name="Czy aktywne?"),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "machine",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="schedules",
+                        to="maintenance.machine",
+                        verbose_name="Maszyna",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Harmonogram przeglądu',
-                'verbose_name_plural': 'Harmonogramy przeglądów',
-                'ordering': ['next_due_date'],
+                "verbose_name": "Harmonogram przeglądu",
+                "verbose_name_plural": "Harmonogramy przeglądów",
+                "ordering": ["next_due_date"],
             },
         ),
     ]

@@ -8,42 +8,147 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Machine',
+            name="Machine",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200, verbose_name='Nazwa maszyny')),
-                ('serial_number', models.CharField(max_length=100, unique=True, verbose_name='Numer seryjny/Inwentarzowy')),
-                ('location', models.CharField(db_index=True, max_length=100, verbose_name='Lokalizacja (Hala/Linia)')),
-                ('status', models.CharField(choices=[('OP', 'Sprawna'), ('MA', 'W trakcie przeglądu'), ('BR', 'Awaria')], default='OP', max_length=2, verbose_name='Status')),
-                ('manufacturer', models.CharField(blank=True, max_length=100, verbose_name='Producent')),
-                ('year_of_production', models.IntegerField(blank=True, null=True, verbose_name='Rok produkcji')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=200, verbose_name="Nazwa maszyny"),
+                ),
+                (
+                    "serial_number",
+                    models.CharField(
+                        max_length=100,
+                        unique=True,
+                        verbose_name="Numer seryjny/Inwentarzowy",
+                    ),
+                ),
+                (
+                    "location",
+                    models.CharField(
+                        db_index=True,
+                        max_length=100,
+                        verbose_name="Lokalizacja (Hala/Linia)",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("OP", "Sprawna"),
+                            ("MA", "W trakcie przeglądu"),
+                            ("BR", "Awaria"),
+                        ],
+                        default="OP",
+                        max_length=2,
+                        verbose_name="Status",
+                    ),
+                ),
+                (
+                    "manufacturer",
+                    models.CharField(
+                        blank=True, max_length=100, verbose_name="Producent"
+                    ),
+                ),
+                (
+                    "year_of_production",
+                    models.IntegerField(
+                        blank=True, null=True, verbose_name="Rok produkcji"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Maszyna',
-                'verbose_name_plural': 'Maszyny',
+                "verbose_name": "Maszyna",
+                "verbose_name_plural": "Maszyny",
             },
         ),
         migrations.CreateModel(
-            name='WorkOrder',
+            name="WorkOrder",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200, verbose_name='Tytuł zgłoszenia')),
-                ('description', models.TextField(blank=True, verbose_name='Opis problemu / Zakres prac')),
-                ('priority', models.CharField(choices=[('L', 'Niski'), ('M', 'Średni'), ('H', 'Wysoki'), ('C', 'Krytyczny')], default='M', max_length=1, verbose_name='Priorytet')),
-                ('status', models.CharField(choices=[('P', 'Oczekujące'), ('I', 'W trakcie'), ('C', 'Zakończone')], default='P', max_length=1, verbose_name='Status')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Data utworzenia')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Data ostatniej aktualizacji')),
-                ('machine', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='work_orders', to='maintenance.machine', verbose_name='Maszyna')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(max_length=200, verbose_name="Tytuł zgłoszenia"),
+                ),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True, verbose_name="Opis problemu / Zakres prac"
+                    ),
+                ),
+                (
+                    "priority",
+                    models.CharField(
+                        choices=[
+                            ("L", "Niski"),
+                            ("M", "Średni"),
+                            ("H", "Wysoki"),
+                            ("C", "Krytyczny"),
+                        ],
+                        default="M",
+                        max_length=1,
+                        verbose_name="Priorytet",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("P", "Oczekujące"),
+                            ("I", "W trakcie"),
+                            ("C", "Zakończone"),
+                        ],
+                        default="P",
+                        max_length=1,
+                        verbose_name="Status",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Data utworzenia"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(
+                        auto_now=True, verbose_name="Data ostatniej aktualizacji"
+                    ),
+                ),
+                (
+                    "machine",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="work_orders",
+                        to="maintenance.machine",
+                        verbose_name="Maszyna",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Zlecenie naprawy',
-                'verbose_name_plural': 'Zlecenia naprawy',
-                'ordering': ['-created_at'],
+                "verbose_name": "Zlecenie naprawy",
+                "verbose_name_plural": "Zlecenia naprawy",
+                "ordering": ["-created_at"],
             },
         ),
     ]

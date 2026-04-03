@@ -15,20 +15,52 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Message',
+            name="Message",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200, verbose_name='Tytuł')),
-                ('content', models.TextField(verbose_name='Treść wiadomości')),
-                ('is_read', models.BooleanField(default=False, verbose_name='Czy przeczytana?')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Data wysłania')),
-                ('receiver', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='received_messages', to=settings.AUTH_USER_MODEL, verbose_name='Odbiorca')),
-                ('sender', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sent_messages', to=settings.AUTH_USER_MODEL, verbose_name='Nadawca')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200, verbose_name="Tytuł")),
+                ("content", models.TextField(verbose_name="Treść wiadomości")),
+                (
+                    "is_read",
+                    models.BooleanField(default=False, verbose_name="Czy przeczytana?"),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Data wysłania"
+                    ),
+                ),
+                (
+                    "receiver",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="received_messages",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Odbiorca",
+                    ),
+                ),
+                (
+                    "sender",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sent_messages",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Nadawca",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Wiadomość',
-                'verbose_name_plural': 'Wiadomości',
-                'ordering': ['-created_at'],
+                "verbose_name": "Wiadomość",
+                "verbose_name_plural": "Wiadomości",
+                "ordering": ["-created_at"],
             },
         ),
     ]

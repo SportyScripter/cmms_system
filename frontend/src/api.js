@@ -1,17 +1,17 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: '/api', 
+  baseURL: "/api",
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access');
-    
+    const token = localStorage.getItem("access");
+
     if (token) {
       config.headers = config.headers || {};
-      if (typeof config.headers.set === 'function') {
-        config.headers.set('Authorization', `Bearer ${token}`);
+      if (typeof config.headers.set === "function") {
+        config.headers.set("Authorization", `Bearer ${token}`);
       } else {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -20,7 +20,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
