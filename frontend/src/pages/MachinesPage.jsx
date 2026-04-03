@@ -34,8 +34,8 @@ export default function MachinesPage() {
     try {
       await api.patch(`/machines/${machineId}/`, { status: newStatus });
 
-      setMachines(
-        machines.map((m) =>
+      setMachines((prevMachines) =>
+        prevMachines.map((m) =>
           m.id === machineId ? { ...m, status: newStatus } : m,
         ),
       );
