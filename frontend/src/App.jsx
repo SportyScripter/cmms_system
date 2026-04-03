@@ -4,6 +4,7 @@ import DashboardPage from "./pages/DashboardPage";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute"; // Importujemy naszego Strażnika
 import MachinesPage from "./pages/MachinesPage";
+import WarehousePage from "./pages/WarehousePage";
 export default function App() {
   return (
     <BrowserRouter>
@@ -18,7 +19,7 @@ export default function App() {
         >
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/machines" element={<MachinesPage />} />
-          <Route path="/warehouse" element={<div>Tu będzie magazyn</div>} />
+          <Route path="/warehouse" element={<WarehousePage />} />
           <Route path="/calendar" element={<div>Tu będzie kalendarz</div>} />
           <Route path="/messages" element={<div>Tu będą wiadomości</div>} />
         </Route>

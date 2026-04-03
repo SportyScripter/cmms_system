@@ -17,6 +17,10 @@ class PartSerializer(serializers.ModelSerializer):
             "price",
             "machine_list",
             "barecode_image",
+            "supplier_catalog_number",
+            "supplier_name",
+            "supplier_link",
+            "type_model",
         ]
 
     def get_machine_list(self, obj):
