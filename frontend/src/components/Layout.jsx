@@ -1,22 +1,29 @@
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Wrench, Package, Calendar, MessageSquare, LogOut } from 'lucide-react';
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Wrench,
+  Package,
+  Calendar,
+  MessageSquare,
+  LogOut,
+} from "lucide-react";
 
 export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = () => {
-    localStorage.removeItem('access');
-    localStorage.removeItem('refresh');
-    navigate('/login');
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    navigate("/login");
   };
 
   const menuItems = [
-    { path: '/dashboard', name: 'Panel Główny', icon: LayoutDashboard },
-    { path: '/machines', name: 'Maszyny i Awarie', icon: Wrench },
-    { path: '/warehouse', name: 'Magazyn Części', icon: Package },
-    { path: '/calendar', name: 'Kalendarz PM', icon: Calendar },
-    { path: '/messages', name: 'Wiadomości', icon: MessageSquare },
+    { path: "/dashboard", name: "Panel Główny", icon: LayoutDashboard },
+    { path: "/machines", name: "Maszyny i Awarie", icon: Wrench },
+    { path: "/warehouse", name: "Magazyn Części", icon: Package },
+    { path: "/calendar", name: "Kalendarz PM", icon: Calendar },
+    { path: "/messages", name: "Wiadomości", icon: MessageSquare },
   ];
 
   return (
@@ -36,9 +43,9 @@ export default function Layout() {
                 key={item.path}
                 to={item.path}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  isActive 
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' 
-                    : 'hover:bg-slate-800 hover:text-white'
+                  isActive
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
+                    : "hover:bg-slate-800 hover:text-white"
                 }`}
               >
                 <Icon size={20} />
@@ -48,7 +55,7 @@ export default function Layout() {
           })}
         </nav>
         <div className="p-4 border-t border-slate-800">
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors"
           >
@@ -59,10 +66,9 @@ export default function Layout() {
       </aside>
       <main className="flex-1 overflow-y-auto">
         <div className="p-8">
-          <Outlet /> 
+          <Outlet />
         </div>
       </main>
-      
     </div>
   );
 }

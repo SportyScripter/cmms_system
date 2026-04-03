@@ -19,9 +19,8 @@ class MessageViewSet(
 
     def get_queryset(self):
         user = self.request.user
-        return (
-            Message.objects.select_related("sender", "receiver")
-            .filter(Q(sender=user) | Q(receiver=user))
+        return Message.objects.select_related("sender", "receiver").filter(
+            Q(sender=user) | Q(receiver=user)
         )
 
     def perform_create(self, serializer):
@@ -30,7 +29,9 @@ class MessageViewSet(
     def partial_update(self, request, *args, **kwargs):
         message = self.get_object()
         if message.receiver != request.user:
-            raise PermissionDenied("Only the receiver can update the message read status.")
+            raise PermissionDenied(
+                "Only the receiver can update the message read status."
+            )
         disallowed = set(request.data.keys()) - {"is_read"}
         if disallowed:
             raise PermissionDenied("Only the 'is_read' field can be updated.")

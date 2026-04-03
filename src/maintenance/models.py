@@ -3,8 +3,6 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 
-# Create your models here.
-
 
 class Machine(models.Model):
     class Status(models.TextChoices):
@@ -47,7 +45,6 @@ class Machine(models.Model):
     def save(self, *args, **kwargs):
         generate_qr = False
 
-        # Determine if this is an update and whether the serial number has changed.
         old_serial_number = None
         if self.pk:
             try:
@@ -56,7 +53,6 @@ class Machine(models.Model):
             except self.__class__.DoesNotExist:
                 old_serial_number = None
 
-        # Generate QR if it does not exist yet or if the serial number has changed.
         if self.serial_number:
             if not self.qr_code_image:
                 generate_qr = True
