@@ -6,7 +6,6 @@ from django.core.files import File
 from django.conf import settings
 
 
-# Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="Nazwa kategorii")
     description = models.TextField(blank=True, verbose_name="Opis")

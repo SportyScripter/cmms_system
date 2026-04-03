@@ -214,3 +214,8 @@ yarn-error.log
 frontend/dist/
 frontend/.vite/
 .vite/
+package-lock.json
+package.json
+
+#Frontend
+src/media/*

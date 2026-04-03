@@ -51,20 +51,17 @@ class InventoryLogSerializer(serializers.ModelSerializer):
         - quantity must be strictly greater than zero
         - ISSUE transactions cannot request more than available stock
         """
-        # Support both create (attrs) and update (self.instance) scenarios
         part = attrs.get("part") or getattr(self.instance, "part", None)
         quantity = attrs.get("quantity", getattr(self.instance, "quantity", None))
         transaction_type = attrs.get(
             "transaction_type", getattr(self.instance, "transaction_type", None)
         )
 
-        # Ensure quantity is provided and strictly positive
         if quantity is None or quantity <= 0:
             raise serializers.ValidationError(
                 {"quantity": "Quantity must be greater than zero."}
             )
 
-            # For ISSUE transactions, ensure we do not exceed available stock
         _ttype = str(transaction_type).upper() if transaction_type is not None else ""
         if _ttype == "ISSUE":
             if part is None:
