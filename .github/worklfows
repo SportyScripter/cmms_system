@@ -1,0 +1,46 @@
+name: CMMS Code Quality CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  frontend-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Pobranie kodu repozytorium
+        uses: actions/checkout@v4
+        
+      - name: Instalacja Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.17'
+          
+      - name: Instalacja paczek NPM
+        run: npm install
+        
+      - name: Sprawdzenie formatowania Prettier
+        run: npx prettier --check "src/**/*.{js,jsx}"
+
+  backend-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
+    steps:
+      - name: Pobranie kodu repozytorium
+        uses: actions/checkout@v4
+        
+      - name: Instalacja Pythona
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Instalacja Black
+        run: pip install black==24.4.2
+        
+      - name: Sprawdzenie formatowania Black
+        run: black --check .
