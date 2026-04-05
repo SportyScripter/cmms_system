@@ -1,11 +1,12 @@
+import { AlertCircle, Minus, Package, Plus, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Package, Search, AlertCircle, Plus, Minus } from "lucide-react";
 import api from "../api";
 
 export default function WarehousePage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [updatingId, setUpdatingId] = useState(null);
 
   useEffect(() => {
     fetchInventory();
@@ -19,6 +20,52 @@ export default function WarehousePage() {
     } catch (err) {
       setError("Nie udało się pobrać stanu magazynu.");
       setLoading(false);
+    }
+  };
+
+  const handleStockChange = async (id, currentQuantity, actionType) => {
+    const isAdding = actionType === "add";
+    const promptMessage = isAdding
+      ? "Ile sztuk chcesz PRZYJĄĆ na magazyn?"
+      : "Ile sztuk chcesz WYDAĆ z magazynu?";
+
+    const amountStr = window.prompt(promptMessage, "1");
+
+    if (!amountStr) return;
+
+    const amount = parseInt(amountStr, 10);
+
+    if (isNaN(amount) || amount <= 0) {
+      alert("Błąd: Podaj prawidłową liczbę całkowitą większą od zera.");
+      return;
+    }
+
+    const newQuantity = isAdding
+      ? currentQuantity + amount
+      : currentQuantity - amount;
+
+    if (newQuantity < 0) {
+      alert(
+        "Błąd: Nie możesz wydać więcej sztuk, niż jest fizycznie w magazynie!",
+      );
+      return;
+    }
+
+    setUpdatingId(id);
+
+    try {
+      await api.patch(`/parts/${id}/`, { quantity: newQuantity });
+
+      setItems(
+        items.map((item) =>
+          item.id === id ? { ...item, quantity: newQuantity } : item,
+        ),
+      );
+    } catch (err) {
+      console.error("Błąd aktualizacji stanu:", err);
+      alert("Wystąpił błąd podczas połączenia z serwerem.");
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -59,56 +106,72 @@ export default function WarehousePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {items.map((item) => (
-                <tr
-                  key={item.id}
-                  className="hover:bg-slate-50 transition-colors"
-                >
-                  <td className="p-4 flex items-center gap-3">
-                    <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
-                      <Package size={20} />
-                    </div>
-                    <span className="font-semibold text-slate-800">
-                      {item.name}
-                    </span>
-                  </td>
-                  <td className="p-4 text-slate-600 font-mono text-sm">
-                    {item.type_model || "Brak danych"}
-                  </td>
-                  <td className="p-4 text-slate-600 font-mono text-sm">
-                    {item.supplier_catalog_number || "Brak danych"}
-                  </td>
-                  <td className="p-4 text-slate-600 font-mono text-sm">
-                    {item.location || "Brak danych"}
-                  </td>
-                  <td className="p-4">
-                    {item.quantity <= item.min_quantity ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium bg-red-50 text-red-700 border border-red-200">
-                        <AlertCircle size={16} />
-                        {item.quantity} szt. (Niski stan!)
+              {items.map((item) => {
+                const isUpdating = updatingId === item.id;
+
+                return (
+                  <tr
+                    key={item.id}
+                    className={`transition-colors ${isUpdating ? "bg-blue-50/50" : "hover:bg-slate-50"}`}
+                  >
+                    <td className="p-4 flex items-center gap-3">
+                      <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                        {isUpdating ? (
+                          <RefreshCw size={20} className="animate-spin" />
+                        ) : (
+                          <Package size={20} />
+                        )}
+                      </div>
+                      <span className="font-semibold text-slate-800">
+                        {item.name}
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        {item.quantity} szt.
-                      </span>
-                    )}
-                  </td>
-                  <td className="p-4 text-right space-x-2">
-                    <button
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                      title="Wydaj z magazynu (TODO)"
-                    >
-                      <Minus size={18} />
-                    </button>
-                    <button
-                      className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-colors"
-                      title="Przyjmij na magazyn (TODO)"
-                    >
-                      <Plus size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="p-4 text-slate-600 font-mono text-sm">
+                      {item.type_model || "Brak danych"}
+                    </td>
+                    <td className="p-4 text-slate-600 font-mono text-sm">
+                      {item.supplier_catalog_number || "Brak danych"}
+                    </td>
+                    <td className="p-4 text-slate-600 font-mono text-sm">
+                      {item.location || "Brak danych"}
+                    </td>
+                    <td className="p-4">
+                      {item.quantity <= item.min_quantity ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium bg-red-50 text-red-700 border border-red-200">
+                          <AlertCircle size={16} />
+                          {item.quantity} szt. (Niski stan!)
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          {item.quantity} szt.
+                        </span>
+                      )}
+                    </td>
+                    <td className="p-4 text-right space-x-2">
+                      <button
+                        onClick={() =>
+                          handleStockChange(item.id, item.quantity, "subtract")
+                        }
+                        disabled={isUpdating}
+                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50"
+                        title="Wydaj z magazynu"
+                      >
+                        <Minus size={18} />
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleStockChange(item.id, item.quantity, "add")
+                        }
+                        disabled={isUpdating}
+                        className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-colors disabled:opacity-50"
+                        title="Przyjmij na magazyn"
+                      >
+                        <Plus size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 
