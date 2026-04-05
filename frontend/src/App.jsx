@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute"; // Importujemy naszego Strażnika
+import CalendarPage from "./pages/CalendarPage";
+import DashboardPage from "./pages/DashboardPage";
+import LoginPage from "./pages/LoginPage";
 import MachinesPage from "./pages/MachinesPage";
 import WarehousePage from "./pages/WarehousePage";
 export default function App() {
@@ -20,7 +21,7 @@ export default function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/machines" element={<MachinesPage />} />
           <Route path="/warehouse" element={<WarehousePage />} />
-          <Route path="/calendar" element={<div>Tu będzie kalendarz</div>} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/messages" element={<div>Tu będą wiadomości</div>} />
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />
